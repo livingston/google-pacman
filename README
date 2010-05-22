@@ -1,0 +1,8 @@
+Google's Homepage celebrating the 30th Birthday of PAC-MAN
+
+Code taken from http://www.google.com/ on 22nd May 2010
+
+Formatted source code for learning purpose
+
+Source Code (c) Copyright 2010 Google
+PAC-MAN(TM) is (c) 1980 NAMCO BANDAI Games Inc.
