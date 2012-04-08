@@ -3179,41 +3179,6 @@ google.y.first = [];
             }
         };
         window.google.report = function (a, b, d) {
-            var e = "";
-            if (window.google.pt) {
-                e += "&srt=" + window.google.pt;
-                delete window.google.pt
-            }
-            var c = document.getElementById("csi");
-            if (c) {
-                var f;
-                if (window.google._bfr != undefined) f = window.google._bfr;
-                else {
-                    f = c.value;
-                    window.google._bfr = f;
-                    c.value = 1
-                }
-                if (f) return ""
-            }
-            c = "chrome.loadTimes";
-            if (window.chrome && window[c] && window[c]().wasFetchedViaSpdy) e += "&p=s";
-            if (a.b) e += "&" + a.b;
-            if (window.parent != window) e += "&wif=1";
-            c = a.t;
-            f = c.start;
-            var h = [];
-            for (var g in c) g != "start" && f && h.push(g + "." + k(a, g));
-            delete c.start;
-            if (b) for (var i in b) e += "&" + i + "=" + b[i];
-            a = [d ? d : "/csi", "?v=3", "&s=" + (window.google.sn || "GWS") + "&action=", a.name, "", e, "&rt=", h.join(",")].join("");
-            b = new Image;
-            var j = window.google.c++;
-            window.google.a[j] = b;
-            b.onload = b.onerror = function () {
-                delete window.google.a[j]
-            };
-            b.src = a;
-            b = null;
             return a
         }
     };
