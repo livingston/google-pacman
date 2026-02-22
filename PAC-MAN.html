@@ -36,10 +36,16 @@
                       if (b) b.style.display = "block"
                   }, 400)
               }
-              a = document.createElement("script");
-              a.type = "text/javascript";
-              a.src = "pacman.js";
-              google.dom.append(a)
+              var audio = document.createElement("script");
+              audio.type = "text/javascript";
+              audio.src = "pacman-audio.js";
+              audio.onload = function () {
+                var s = document.createElement("script");
+                s.type = "text/javascript";
+                s.src = "pacman.js";
+                google.dom.append(s)
+              };
+              google.dom.append(audio)
             }
           }
           function e() {

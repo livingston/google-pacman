@@ -2919,6 +2919,7 @@ function () {
             game.updateSoundIcon()
         }
     };
+    // PacManAudioEngine is loaded from pacman-audio.js (global variable)
     // ============================================================
     // Audio System — sound playback and ambient tracks
     // ============================================================
@@ -3079,126 +3080,15 @@ function () {
         game.graphicsReady = FALSE;
         game.preloadImage("pacman10-hp-sprite.png")
     };
-    game.trimString = function (b) {
-        return b.replace(/^[\s\xa0]+|[\s\xa0]+$/g, "")
-    };
-    game.g = function (b, c) {
-        if (b < c) return -1;
-        else if (b > c) return 1;
-        return 0
-    };
-    game.compareVersions = function (b, c) {
-        for (var d = 0, f = game.trimString(String(b)).split("."), h = game.trimString(String(c)).split("."), j = Math.max(f.length, h.length), k = 0; d == 0 && k < j; k++) {
-            var x = f[k] || "",
-                F = h[k] || "",
-                G = new RegExp("(\\d*)(\\D*)", "g"),
-                H = new RegExp("(\\d*)(\\D*)", "g");
-            do {
-                var t = G.exec(x) || ["", "", ""],
-                    u = H.exec(F) || ["", "", ""];
-                if (t[0].length == 0 && u[0].length == 0) break;
-                d = t[1].length == 0 ? 0 : parseInt(t[1], 10);
-                var I = u[1].length == 0 ? 0 : parseInt(u[1], 10);
-                d = game.g(d, I) || game.g(t[2].length == 0, u[2].length == 0) || game.g(t[2], u[2])
-            } while (d == 0)
-        }
-        return d
-    };
-    game.getFlashVersion = function (b) {
-        b = b.match(/[\d]+/g);
-        b.length = 3;
-        return b.join(".")
-    };
-    game.detectFlash = function () {
-        var b = FALSE,
-            c = "";
-        if (navigator.plugins && navigator.plugins.length) {
-            var d = navigator.plugins["Shockwave Flash"];
-            if (d) {
-                b = TRUE;
-                if (d.description) c = game.getFlashVersion(d.description)
-            }
-            if (navigator.plugins["Shockwave Flash 2.0"]) {
-                b = TRUE;
-                c = "2.0.0.11"
-            }
-        } else if (navigator.mimeTypes && navigator.mimeTypes.length) {
-            if (b = (d = navigator.mimeTypes["application/x-shockwave-flash"]) && d.enabledPlugin) {
-                c = d.enabledPlugin.description;
-                c = game.getFlashVersion(c)
-            }
-        } else try {
-            d = new ActiveXObject("ShockwaveFlash.ShockwaveFlash.7");
-            b = TRUE;
-            c = game.getFlashVersion(d.GetVariable("$version"))
-        } catch (f) {
-            try {
-                d = new ActiveXObject("ShockwaveFlash.ShockwaveFlash.6");
-                b = TRUE;
-                c = "6.0.21"
-            } catch (h) {
-                try {
-                    d = new ActiveXObject("ShockwaveFlash.ShockwaveFlash");
-                    b = TRUE;
-                    c = game.getFlashVersion(d.GetVariable("$version"))
-                } catch (j) {}
-            }
-        }
-        game.hasFlash = b;
-        game.flashVersion = c
-    };
-    game.isFlashVersion = function (b) {
-        return game.compareVersions(game.flashVersion, b) >= 0
-    };
     game.prepareSound = function () {
         game.soundAvailable = FALSE;
         game.soundReady = FALSE;
-        game.detectFlash();
-        if (!game.hasFlash || !game.isFlashVersion("9.0.0.0")) {
-            game.soundReady = TRUE;
-            game.checkIfEverythingIsReady()
-        } else {
-            game.flashIframe = document.createElement("iframe");
-            game.flashIframe.name = "pm-sound";
-            game.flashIframe.style.position = "absolute";
-            game.flashIframe.style.top = "-150px";
-            game.flashIframe.style.border = 0;
-            game.flashIframe.style.width = "100px";
-            game.flashIframe.style.height = "100px";
-            google.dom.append(game.flashIframe);
-            game.flashIframeDoc = game.flashIframe.contentDocument;
-            if (game.flashIframeDoc == undefined || game.flashIframeDoc == null) game.flashIframeDoc = game.flashIframe.contentWindow.document;
-            game.flashIframeDoc.open();
-            game.flashIframeDoc.write('<html><head></head><body><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" width="0" height="0" id="pacman-sound-player" type="application/x-shockwave-flash"> <param name="movie" value="pacman10-hp-sound.swf"> <param name="allowScriptAccess" value="always"> <object id="pacman-sound-player-2"  type="application/x-shockwave-flash" data="pacman10-hp-sound.swf" width="0" height="0"><param name="allowScriptAccess" value="always"> </object></object></body></html>');
-            game.flashIframeDoc.close();
-            window.setTimeout(game.flashNotReady, 3E3)
+        if (window.AudioContext || window.webkitAudioContext) {
+            game.flashSoundPlayer = PacManAudioEngine;
+            game.soundAvailable = TRUE;
         }
-    };
-    game.flashNotReady = function () {
-        if (!game.ready) {
-            game.soundAvailable = FALSE;
-            game.soundReady = TRUE;
-            game.checkIfEverythingIsReady()
-        }
-    };
-    game.flashReady = function (b) {
-        game.flashSoundPlayer = b;
-        game.soundAvailable = TRUE;
         game.soundReady = TRUE;
-        game.checkIfEverythingIsReady()
-    };
-    game.flashLoaded = function () {
-        if (game.flashIframeDoc) {
-            var b = game.flashIframeDoc.getElementById("pacman-sound-player");
-            if (b && b.playTrack) {
-                game.flashReady(b);
-                return
-            } else if ((b = game.flashIframeDoc.getElementById("pacman-sound-player-2")) && b.playTrack) {
-                game.flashReady(b);
-                return
-            }
-        }
-        game.flashNotReady()
+        game.checkIfEverythingIsReady();
     };
     game.destroy = function () {
         if (google.pacman) {
@@ -3207,7 +3097,7 @@ function () {
             window.clearInterval(game.dotTimer);
             window.clearInterval(game.dotTimerMs);
             google.dom.remove(game.styleElement);
-            google.dom.remove(game.flashIframe);
+            PacManAudioEngine.close();
             google.dom.remove(game.canvasEl);
             google.pacman = undefined
         }
@@ -3215,7 +3105,6 @@ function () {
     game.exportFunctionCalls = function () {
         google.pacman = {};
         google.pacman.insertCoin = game.insertCoin;
-        google.pacman.flashLoaded = game.flashLoaded;
         google.pacman.destroy = game.destroy
     };
     game.updateLoadingProgress = function (b) {
