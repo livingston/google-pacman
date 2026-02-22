@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Google's PAC-MAN doodle</title>
+  <style>body{margin:0}.w{width:625px;margin:35px auto}.d{text-align:center;font-size:13px}.d p{margin:0 0 5px}#logo{margin:20px auto}a{color:#999;text-decoration:none;display:inline-block;border-bottom:1px dashed}a:hover{border-bottom-style:solid;color:#333}#lga{margin:0 0 30px}</style>
+
+  <script>
+    window.google = {
+      time: function () {
+        return (new Date).getTime()
+      },
+      Toolbelt: {},
+      y: {},
+      dstr: [],
+      rein: []
+    }
+  </script>
+</head>
+<body>
+  <div class='w'>
+    <a href='https://github.com/livingston/google-pacman' title='Back to Project Page'>&larr; Back to Project Page</a>
+
+    <div id=lga>
+      <div id=logo style="width:554px;height:186px;background:black url(pacman10-hp.png) 0 0 no-repeat;position:relative;margin-bottom:9px" title="PAC-MAN's 30th Birthday! Doodle with PAC-MAN &amp; (c)1980 NAMCO BANDAI Games Inc.">
+        <div id="logo-l" style="width:200px;height:2px;left:177px;top:157px;background:#990;position:absolute;display:none;overflow:hidden">
+          <div id="logo-b" style="position:absolute;left:0;background:#ff0;height:8px;width:0"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class='d'>
+      <h4>Disclaimer:</h4>
+      <p>PAC-MAN doodle celebrating the 30th Birthday of PAC-MAN, taken from <a href='http://www.google.com' target='_blank'>Google</a>&rsquo;s homepage on 22nd May 2010</p>
+      <p class='copy'>Source Code &mdash; &copy; Copyright 2010 Google.</p>
+      <p class='copy'>PAC-MAN&trade; &mdash; &copy; 1980 NAMCO BANDAI Games Inc.</p>
+    </div>
+  </div>
+
+  <script src='google-script.js'></script>
+  <script>
+    google.neegg = 1;
+
+    google.pml = function () {
+      function d(a) {
+        if (!google.pml_installed) {
+          google.pml_installed = true;
+          if (!a) {
+              document.getElementById("logo").style.background = "black";
+              window.setTimeout(function () {
+                  var b = document.getElementById("logo-l");
+                  if (b) b.style.display = "block"
+              }, 400)
+          }
+          var audio = document.createElement("script");
+          audio.type = "text/javascript";
+          audio.src = "pacman-audio.js";
+          audio.onload = function () {
+            var s = document.createElement("script");
+            s.type = "text/javascript";
+            s.src = "pacman.js";
+            google.dom.append(s)
+          };
+          google.dom.append(audio)
+        }
+      }
+      function e() {
+        if (document.f && document.f.btnI) document.f.btnI.onclick = function () {
+          if (typeof google.pacman != "undefined") google.pacman.insertCoin();
+          else {
+            google.pacManSound = true;
+            d(false)
+          }
+          return false
+        }
+      }
+      if (!google.pml_loaded) {
+        google.pml_loaded = true;
+        window.setTimeout(function () {
+          d(true)
+        }, 1E3);
+        e();
+        google.rein && google.rein.push(e);
+        google.dstr && google.dstr.push(function () {
+          google.pacman && google.pacman.destroy();
+          if (google.pml_installed) {
+              google.pml_installed = false
+          }
+        });
+        google.pacManQuery = function () {
+          return false
+        }
+      }
+    };
+
+    google.pml && google.pml();
+  </script>
+</body>
+</html>
